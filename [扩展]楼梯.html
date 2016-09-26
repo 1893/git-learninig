@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>楼梯</title>
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			#LoutiNav {
+				width: 32px;
+				position: fixed;
+				top: 150px;
+				left: 50px;
+				border: 1px solid #ddd;
+				display: none;
+			}
+			#LoutiNav ul li {
+				width: 32px;
+				height: 32px;
+				border-bottom: 1px dotted #DDDDDD;
+				list-style: none;
+				font-size: 12px;
+				color: #666;
+				text-align: center;
+				line-height: 32px;
+				position: relative;
+				cursor: pointer;
+			}
+			#LoutiNav ul li span {
+				width: 32px;
+				height: 32px;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+			#LoutiNav ul li span {
+				display: none;
+			}
+			#LoutiNav ul li.last {
+				background: #C00;
+				color: #fff;
+				border-bottom: 1px solid #ddd;
+			}
+			#LoutiNav ul li.hover span {
+				background: #c00;
+				color: #fff;
+				display: block;
+			}
+			#LoutiNav ul li.hover span.active {
+				background: #c00;
+				color: #fff;
+				display: block;
+			}
+			#LoutiNav ul li span.active {
+				background: #fff;
+				color: #c00;
+				display: block;
+			}
+			#header {
+				width: 1000px;
+				height: 1000px;
+				background: #cc6633;
+				margin: 0 auto;
+			}
+			#main {
+				width: 1000px;
+				background: #66ff66;
+				margin: 0 auto;
+			}
+			#main .Louti {
+				
+				height: 600px;
+				width: 1000px;
+				font-size: 50px;
+				color: #fff;
+				font-weight: bold;
+				text-align: center;
+				line-height: 600px;
+			}
+			#footer {
+				width: 1000px;
+				height: 400px;
+				background: red;
+				margin: 0 auto;
+			}
+		</style>
+		<script src="../jquery-1.12.0.js"></script>
+		<script>
+			$(function(){
+				/*
+					思路：
+						1、给window绑定scroll事件
+							1）当滚动到一定距离时，显示导航条
+							2）当滚动到楼层对应位置时，高亮显示导航条对应楼层
+						2、点击导航条，滚动到相应的楼层
+						3、返回顶部
+				 */
+				var $nav = $('#LoutiNav');
+				var $floor = $('#main .Louti');
+				
+				// 1、给window绑定scroll事件
+				$(window).on('scroll',function(){
+					// 获取滚动过的距离
+					var scrollTop = $(window).scrollTop();
+
+					// 1）当滚动到一定距离时，显示导航条
+					if(scrollTop >= 500){
+						$nav.fadeIn();
+					}else{
+						$nav.fadeOut();
+					}
+
+					// 2）当滚动到楼层对应位置时，高亮显示导航条对应楼层
+					// 目的：获得index值
+					$floor.each(function(idx,ele){
+						if(scrollTop >= $(ele).offset().top && scrollTop <= $(ele).offset().top + $(ele).outerHeight()/2){
+							$nav.find('li').removeClass('hover').eq(idx).addClass('hover');
+							return false;
+						}
+					});
+				});
+
+				// 2、点击导航条，滚动到相应的楼层
+				$nav.on('click','li',function(){
+					// 3、返回顶部
+					if($(this).hasClass('last')){
+						// $(window).scrollTop(0);
+						$('html,body').animate({scrollTop:0});
+						return;
+					}
+					var index = $(this).index();
+					var scrollTop = $floor.eq(index).offset().top;
+					// $(window).scrollTop(scrollTop);
+					$('html,body').animate({scrollTop:scrollTop});
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<div id="LoutiNav">
+			<ul>
+				<li class="hover">1F <span>服饰</span> </li>
+				<li>2F <span>美妆</span> </li>
+				<li>3F <span>手机</span> </li>
+				<li>4F <span>家电</span> </li>
+				<li>5F <span>数码</span> </li>
+				<li>6F <span>运动</span> </li>
+				<li>7F <span>居家</span> </li>
+				<li>8F <span>母婴</span> </li>
+				<li>9F <span>食品</span> </li>
+				<li>10F <span>图书</span> </li>
+				<li>11F <span>服务</span> </li>
+				<li class="last">Top</li>
+			</ul>
+		</div>
+
+		<!--楼层内容开始-->
+
+		<div id="header">
+
+		</div>
+		<div id="main">
+			<div class="Louti" style="background: #cc0033;">
+				服饰
+			</div>
+			<div class="Louti" style="background: #999933;">
+				美妆
+			</div>
+			<div class="Louti" style="background: #ccff33;">
+				手机
+			</div>
+			<div class="Louti" style="background: #006633;">
+				家电
+			</div>
+			<div class="Louti" style="background: #6666cc;">
+				数码
+			</div>
+			<div class="Louti" style="background: #ff6600;">
+				运动
+			</div>
+			<div class="Louti" style="background: #ffff00;">
+				居家
+			</div>
+			<div class="Louti" style="background: #3333ff;">
+				母婴
+			</div>
+			<div class="Louti" style="background: #ff00cc;">
+				食品
+			</div>
+			<div class="Louti" style="background: #669900;">
+				图书
+			</div>
+			<div class="Louti" style="background: #ff66cc;">
+				服务
+			</div>
+
+		</div>
+		<div id="footer">
+
+		</div>
+		<!--楼层内容结束-->
+
+	</body>
+</html>
